@@ -4,11 +4,11 @@ compatibility_minimum = 4.1
 reloadable = true
 
 [libraries]
-linux.debug.x86_64 =     "res://../rust/target/debug/librocket-jump.so"
-linux.release.x86_64 =   "res://../rust/target/release/librocket-jump.so"
-windows.debug.x86_64 =   "res://../rust/target/debug/rocket-jump.dll"
-windows.release.x86_64 = "res://../rust/target/release/rocket-jump.dll"
-macos.debug =            "res://../rust/target/debug/librocket-jump.dylib"
-macos.release =          "res://../rust/target/release/librocket-jump.dylib"
-macos.debug.arm64 =      "res://../rust/target/debug/librocket-jump.dylib"
-macos.release.arm64 =    "res://../rust/target/release/librocket-jump.dylib"
+linux.debug.x86_64 =     "res://../rust/target/debug/librocket_jump.so"
+linux.release.x86_64 =   "res://../rust/target/release/librocket_jump.so"
+windows.debug.x86_64 =   "res://../rust/target/debug/rocket_jump.dll"
+windows.release.x86_64 = "res://../rust/target/release/rocket_jump.dll"
+macos.debug =            "res://../rust/target/debug/librocket_jump.dylib"
+macos.release =          "res://../rust/target/release/librocket_jump.dylib"
+macos.debug.arm64 =      "res://../rust/target/debug/librocket_jump.dylib"
+macos.release.arm64 =    "res://../rust/target/release/librocket_jump.dylib"
