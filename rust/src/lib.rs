@@ -1,14 +1,38 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use godot::engine::{ISprite2D, Sprite2D};
+use godot::prelude::*;
+
+struct MyExtension;
+
+#[gdextension]
+unsafe impl ExtensionLibrary for MyExtension {}
+
+#[derive(GodotClass)]
+#[class(base = Sprite2D)]
+struct Player {
+    speed: f64,
+    angular_speed: f64,
+
+    base: Base<Sprite2D>,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[godot_api]
+impl ISprite2D for Player {
+    fn init(base: Base<Sprite2D>) -> Self {
+        godot_print!("Hello, world!");
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+        Self {
+            speed: 400.0,
+            angular_speed: std::f64::consts::PI,
+            base,
+        }
+    }
+
+    fn physics_process(&mut self, delta: f64) {
+        let radians = (self.angular_speed * delta) as f32;
+        self.base_mut().rotate(radians);
+
+        let rotation = self.base().get_rotation();
+        let velocity = Vector2::UP.rotated(rotation) * self.speed as f32;
+        self.base_mut().translate(velocity * delta as f32);
     }
 }
