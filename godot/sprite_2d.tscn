@@ -1,7 +1,3 @@
-[gd_scene load_steps=2 format=3 uid="uid://cusp1pxrh1lst"]
+[gd_scene format=3 uid="uid://bybqtcovxue5w"]
 
-[ext_resource type="Texture2D" uid="uid://bb43uctn37md7" path="res://icon.svg" id="1_hnwoo"]
-
-[node name="Sprite2D" type="Player"]
-position = Vector2(399, 327)
-texture = ExtResource("1_hnwoo")
+[node name="Node3D" type="Node3D"]
