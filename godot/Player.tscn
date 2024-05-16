@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://dlyyrdgtdsy1d"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qs5bj"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_05bjg"]
+
+[node name="Player" type="Player"]
+look_sensitivity = 0.01
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_qs5bj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_05bjg")
+
+[node name="CameraPivot" type="Marker3D" parent="."]
+
+[node name="Camera" type="Camera3D" parent="CameraPivot"]
+fov = 90.0
