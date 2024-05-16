@@ -132,8 +132,8 @@ impl ICharacterBody3D for Player {
             self.camera.set_rotation(Vector3::new(
                 clamp(
                     Variant::from(camera_rotation.x),
-                    Variant::from(-80_f32.to_radians()),
-                    Variant::from(80_f32.to_radians()),
+                    Variant::from(-90_f32.to_radians()),
+                    Variant::from(90_f32.to_radians()),
                 )
                 .to(),
                 camera_rotation.y,
