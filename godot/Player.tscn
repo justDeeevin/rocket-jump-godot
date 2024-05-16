@@ -1,18 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://dlyyrdgtdsy1d"]
+[gd_scene load_steps=4 format=3 uid="uid://dlyyrdgtdsy1d"]
+
+[ext_resource type="PackedScene" uid="uid://utg4x721wwon" path="res://Gun.tscn" id="1_i8c24"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qs5bj"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_05bjg"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_amnxb"]
-albedo_color = Color(0, 0, 0, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_524el"]
-material = SubResource("StandardMaterial3D_amnxb")
-size = Vector3(0.1, 0.1, 0.5)
-
 [node name="Player" type="Player"]
 look_sensitivity = 0.01
+friction = 10.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_qs5bj")
@@ -26,6 +22,4 @@ mesh = SubResource("CapsuleMesh_05bjg")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.533994, 0)
 fov = 90.0
 
-[node name="Gun" type="MeshInstance3D" parent="CameraPivot/Camera"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.374152, -0.487024)
-mesh = SubResource("BoxMesh_524el")
+[node name="Gun" parent="CameraPivot/Camera" instance=ExtResource("1_i8c24")]

@@ -1,3 +1,4 @@
+use crate::classes::Gun;
 use godot::{
     engine::{
         input::MouseMode, utilities::clamp, CharacterBody3D, ICharacterBody3D, InputEvent,
@@ -20,6 +21,9 @@ pub struct Player {
     jump_impulse: f32,
     #[export]
     look_sensitivity: f32,
+    #[export]
+    friction: f32,
+    gun: Gd<Gun>,
     camera_pivot: Gd<Marker3D>,
     camera: Gd<Camera3D>,
     target_velocity: Vector3,
@@ -37,7 +41,9 @@ impl ICharacterBody3D for Player {
             look_sensitivity: 0.03,
             camera_pivot: Marker3D::new_alloc(),
             camera: Camera3D::new_alloc(),
+            gun: Gun::new_alloc(),
             target_velocity: Vector3::ZERO,
+            friction: 10.0,
             base,
         }
     }
@@ -45,6 +51,7 @@ impl ICharacterBody3D for Player {
     fn ready(&mut self) {
         self.camera_pivot = self.base().get_node_as("CameraPivot");
         self.camera = self.camera_pivot.get_node_as("Camera");
+        self.gun = self.camera.get_node_as("Gun");
 
         let mut input = Input::singleton();
         input.set_mouse_mode(MouseMode::CAPTURED);
@@ -63,15 +70,27 @@ impl ICharacterBody3D for Player {
             * Vector3::new(input_direction.x, 0.0, input_direction.y))
         .normalized();
 
-        self.target_velocity.x = direction.x * self.speed;
-        self.target_velocity.z = direction.z * self.speed;
+        if direction != Vector3::ZERO {
+            self.target_velocity.x = direction.x * self.speed;
+            self.target_velocity.z = direction.z * self.speed;
+        }
 
         if !self.base().is_on_floor() {
             self.target_velocity.y -= self.fall_acceleration * delta as f32;
         }
 
-        if self.base().is_on_floor() && input.is_action_just_pressed("jump".into()) {
-            self.target_velocity.y = self.jump_impulse;
+        if self.base().is_on_floor() {
+            if direction == Vector3::ZERO
+                && self.target_velocity.x != 0.0
+                && self.target_velocity.z != 0.0
+            {
+                self.target_velocity.x *= 1.0 / self.friction;
+                self.target_velocity.z *= 1.0 / self.friction;
+            }
+
+            if input.is_action_just_pressed("jump".into()) {
+                self.target_velocity.y = self.jump_impulse;
+            }
         }
 
         let target_velocity = self.target_velocity;
@@ -82,11 +101,21 @@ impl ICharacterBody3D for Player {
     fn input(&mut self, event: Gd<InputEvent>) {
         let mut input = Input::singleton();
 
-        if event.is_action_pressed("ui_cancel".into()) {
+        if event.is_action_pressed("ui_cancel".into())
+            && input.get_mouse_mode() == MouseMode::CAPTURED
+        {
             input.set_mouse_mode(MouseMode::VISIBLE);
         }
         if event.is_action_pressed("left_click".into()) {
-            input.set_mouse_mode(MouseMode::CAPTURED);
+            if input.get_mouse_mode() == MouseMode::CAPTURED {
+                let point = self.gun.bind().shoot();
+                if let Some(point) = point {
+                    self.base_mut()
+                        .emit_signal("hit".into(), &[Variant::from(point)]);
+                }
+            } else {
+                input.set_mouse_mode(MouseMode::CAPTURED);
+            }
         }
 
         if let Ok(mouse_motion) = event.try_cast::<InputEventMouseMotion>() {
@@ -111,5 +140,15 @@ impl ICharacterBody3D for Player {
                 camera_rotation.z,
             ));
         }
+    }
+}
+
+#[godot_api]
+impl Player {
+    #[signal]
+    fn hit(point: Vector3);
+
+    pub fn add_velocity(&mut self, velocity: Vector3) {
+        self.target_velocity += velocity;
     }
 }

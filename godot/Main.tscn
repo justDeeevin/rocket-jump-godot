@@ -1,21 +1,43 @@
-[gd_scene load_steps=5 format=3 uid="uid://bybqtcovxue5w"]
+[gd_scene load_steps=10 format=3 uid="uid://bybqtcovxue5w"]
 
+[ext_resource type="PackedScene" uid="uid://jm4or2xsdcmb" path="res://Explosion.tscn" id="1_1vlu8"]
 [ext_resource type="PackedScene" uid="uid://dlyyrdgtdsy1d" path="res://Player.tscn" id="1_6h76x"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fu45v"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_k5apg"]
+sky_material = SubResource("ProceduralSkyMaterial_fu45v")
+
+[sub_resource type="Environment" id="Environment_kc2j1"]
+background_mode = 2
+sky = SubResource("Sky_k5apg")
+tonemap_mode = 2
+glow_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fusep"]
 size = Vector3(60, 2, 60)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yjkf3"]
-albedo_color = Color(0, 0.5, 0.0666667, 1)
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_thkmw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bieye"]
+albedo_color = Color(0.24588, 0.54, 0.1296, 1)
+normal_texture = SubResource("NoiseTexture2D_thkmw")
 
 [sub_resource type="BoxMesh" id="BoxMesh_fs72n"]
-material = SubResource("StandardMaterial3D_yjkf3")
+material = SubResource("StandardMaterial3D_bieye")
 size = Vector3(60, 2, 60)
 
 [node name="Main" type="Main"]
+explosion_scene = ExtResource("1_1vlu8")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_kc2j1")
 
 [node name="Ground" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
 shape = SubResource("BoxShape3D_fusep")
@@ -24,7 +46,10 @@ shape = SubResource("BoxShape3D_fusep")
 mesh = SubResource("BoxMesh_fs72n")
 
 [node name="Player" parent="." instance=ExtResource("1_6h76x")]
+fall_acceleration = 60.0
+friction = 1.5
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_mask = 2
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20, 0)
@@ -34,19 +59,31 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 20,
 [node name="East" type="CSGBox3D" parent="Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 30.1734)
 use_collision = true
+collision_layer = 2
 size = Vector3(61, 2, 1)
 
 [node name="West" type="CSGBox3D" parent="Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -29.8266)
 use_collision = true
+collision_layer = 2
 size = Vector3(61, 2, 1)
 
 [node name="North" type="CSGBox3D" parent="Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 1, 0.378147)
 use_collision = true
+collision_layer = 2
 size = Vector3(1, 2, 60)
 
 [node name="South" type="CSGBox3D" parent="Walls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 1, 0.378147)
 use_collision = true
+collision_layer = 2
 size = Vector3(1, 2, 60)
+
+[node name="Box" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 3.5, -2)
+use_collision = true
+collision_layer = 2
+size = Vector3(4, 7, 5)
+
+[connection signal="hit" from="Player" to="." method="on_hit"]

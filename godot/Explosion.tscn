@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://jm4or2xsdcmb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_udlwd"]
+albedo_color = Color(1, 0.583333, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_p5sq8"]
+material = SubResource("StandardMaterial3D_udlwd")
+radius = 1.0
+height = 2.0
+
+[node name="Explosion" type="Explosion"]
+decay_speed = 1.0
+explosion_force = 40.0
+radius = 10.0
+mesh = SubResource("SphereMesh_p5sq8")
