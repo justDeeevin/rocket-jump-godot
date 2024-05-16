@@ -16,4 +16,5 @@ mesh = SubResource("CapsuleMesh_05bjg")
 [node name="CameraPivot" type="Marker3D" parent="."]
 
 [node name="Camera" type="Camera3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.533994, 0)
 fov = 90.0
