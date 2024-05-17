@@ -1,0 +1,5 @@
+= Rocket jumping
+Devin Droddy <devin.droddy@gmail.com>
+v0.1.0, 2024-05-16
+== Usage
+To play this game, you'll need rustup and Godot. This was made for Godot 4.2. https://godotengine.org/download/[Install Godot] and https://rustup.rs/[install rustup], then clone this repository. Import the godot project from the `godot` directory. Go into a terminal, enter the `rust` directory, and run `cargo build` to compile the necessary libraries. Then, open the editor and run the project!
